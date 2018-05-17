@@ -365,7 +365,7 @@ ubuntu@mytardis-manual:~$ sudo systemctl status gunicorn
 We can also now check that MyTardis is available through the browser: http://ipaddress/
 
 ## Scheduled and asynchronous tasks using Celery
-MyTardis has several tasks that operate asynchronously or on a schedule. This is done using Celery. Celery uses a messaging queue and while there are some default configs in for MyTardis to use the database as the broker, this is not very efficient. A much better method is to use RabbitMQ as the broker. Let’s install RabbitMQ and configure it:
+MyTardis has several tasks that operate asynchronously or on a schedule. This is done using [Celery](http://www.celeryproject.org). Celery uses a messaging queue and while there are some default configs in for MyTardis to use the database as the broker, this is not very efficient. A much better method is to use RabbitMQ as the broker. Let’s install RabbitMQ and configure it:
 
 From `ubuntu` user:
 ```
