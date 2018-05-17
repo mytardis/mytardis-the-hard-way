@@ -231,7 +231,7 @@ Running migrations:
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py createcachetable celery_lock_cache
 ```
 
-## Nginx as web server
+## Serving through Nginx
 By default MyTardis runs on port 8000 and it’s not generally advisable to open this to the world. We typically run a simple Nginx server that port forwards the MyTardis server and it’s static assets to port 80.
 
 From the `ubuntu` user:
