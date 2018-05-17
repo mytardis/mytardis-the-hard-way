@@ -1,8 +1,8 @@
 # MyTardis on Ubuntu 16.04 LTS
-This guide won't cover getting a Ubuntu 16.04 LTS server or virtual machine (VM).
+This guide assumes that you already have an Ubuntu 16.04 LTS server or virtual machine (VM) running. It's also assumes that you have some familiarity setting up a local development enviroment for MyTardis following [this (somewhat outdated) guide](https://mytardis.readthedocs.io/en/develop/admin/install.html).
 
-## Installing dependencies
-From mytardis.readthedocs.io:
+## Getting started
+We need to install some dependencies. From [mytardis.readthedocs.io](https://mytardis.readthedocs.io/en/develop/admin/install.html):
 ```
 ubuntu@mytardis-manual:~$ sudo apt-get update
 ubuntu@mytardis-manual:~$ sudo apt-get install git ipython libldap2-dev libsasl2-dev \
@@ -13,7 +13,6 @@ ubuntu@mytardis-manual:~$ sudo apt-get install git ipython libldap2-dev libsasl2
   python-virtualenv python-wand python-yaml virtualenvwrapper \
   zlib1g-dev libfreetype6-dev libjpeg-dev
 ```
-
 
 ## Installing MyTardis
 Let’s create a group and user for our web app:
@@ -480,7 +479,7 @@ ubuntu@mytardis-manual:~$ sudo systemctl restart celerybeat
 ```
 
 ## That's it
-We now have a fully functional basic version of MyTardis.
+We should now have a fully functional basic version of MyTardis.
 
 ### TODO
 
