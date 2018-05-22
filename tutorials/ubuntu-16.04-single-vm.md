@@ -86,7 +86,8 @@ Destroying test database for alias 'default'...
 ```
 
 Okay for now we are just going to use the `sqlite` database for testing. In fact, this is already configured in MyTardis’s  default settings [here](https://github.com/mytardis/mytardis/blob/develop/tardis/default_settings/database.py). Note we’ll need to do this again when we switch to a production database.
-Let’s run the migrate and setup the cache and celery_lock tables:
+
+Let’s run the migration:
 ```
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py migrate
 Operations to perform:
@@ -117,6 +118,9 @@ Running migrations:
   Applying tardis_portal.0001_squashed_0011_auto_20160505_1643...
  OK
   Applying tastypie.0001_initial... OK
+```
+Let's setup the cache and celery_lock tables:
+```
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py createcachetable default_cache
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py createcachetable celery_lock_cache
 ```
@@ -196,7 +200,7 @@ DATABASES = {
 }
 ```
 
-We now need to re-run the migrations and create the `default_cache` and `celery_lock_cache` tables.
+We now need to re-run the migrations first and then create the `default_cache` and `celery_lock_cache` tables.
 ```
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py migrate
 Operations to perform:
@@ -227,6 +231,9 @@ Running migrations:
   Applying tardis_portal.0001_squashed_0011_auto_20160505_1643...
  OK
   Applying tastypie.0001_initial... OK
+```
+
+```
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py createcachetable default_cache
 (mytardis) mytardis@mytardis-manual:~/mytardis$ python mytardis.py createcachetable celery_lock_cache
 ```
