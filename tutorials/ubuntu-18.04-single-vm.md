@@ -84,6 +84,7 @@ Destroying test database for alias 'default'...
 
 Now let's run mytardis's Javascript unit tests.  This requires running the full "npm install" as above, rather than just running "npm install --production" to install the bare minimum Javascript dependencies.
 
+```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm test
 
 ...
@@ -141,7 +142,7 @@ At this point we could have a play with MyTardis on a local machine, but there a
 ## Switching to Postgres DB
 To run in production, we really need to switch databases.  Let’s install postgres:
 ```
-ubuntu@mytardis-manual:~$ sudo apt-get install postgresql postgresql-contrib
+ubuntu@mytardis-ubuntu18:~$ sudo apt-get install postgresql postgresql-contrib
 ```
 Note: we have switched back to the `ubuntu` user.
 
