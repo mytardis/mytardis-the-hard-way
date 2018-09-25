@@ -1,4 +1,4 @@
-# MyTardis on Ubuntu 16.04 LTS
+# MyTardis 3.x on Ubuntu 16.04 LTS
 This guide assumes that you already have an Ubuntu 16.04 LTS server or virtual machine (VM) running. It's also assumes that you have some familiarity setting up a local development enviroment for MyTardis following [this (somewhat outdated) guide](https://mytardis.readthedocs.io/en/develop/admin/install.html).
 
 ## Getting started
