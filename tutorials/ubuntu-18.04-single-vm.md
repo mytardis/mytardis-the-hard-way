@@ -456,7 +456,7 @@ MyTardis's `tardis/default_settings/celery_settings.py` contains a Celery beat
 task which makes sure any files that missed verification get reverified.  We
 can overwrite the `CELERYBEAT_SCHEDULE` setting in our `tardis/settings.py` and
 make the "verify-files" task run more often to confirm that scheduled tasks are
-working.  For now, let's set it to run every 30 seconds instead of every 3600
+working.  For now, let's set it to run every 30 seconds instead of every 300
 seconds.
 
 We can add this to `tardis/settings.py`:
@@ -509,7 +509,7 @@ You can check `/var/log/syslog` (or wherever you have chosen to redirect the out
 more information.
 
 Once you have confirmed that the `tardis_portal.verify_dfos` task is being run every 30 seconds, you can remove the
-`CELERYBEAT_SCHEDULE` from your `tardis/settings.py` to revert to the default interval of 3600 seconds in
+`CELERYBEAT_SCHEDULE` from your `tardis/settings.py` to revert to the default interval of 300 seconds in
 `tardis/default_settings/celery_settings.py` and restart the Celery beat service:
 
 ```
