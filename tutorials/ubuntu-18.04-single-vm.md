@@ -2,6 +2,13 @@
 This guide assumes that you already have an Ubuntu 18.04 LTS server or virtual machine (VM) running. It's also assumes that you have some familiarity setting up a local development enviroment for MyTardis following [this guide](https://mytardis.readthedocs.io/en/develop/admin/install.html).
 
 ## Getting started
+
+Let's set the timezone first:
+
+```
+ubuntu@mytardis-ubuntu18:~$ sudo timedatectl set-timezone Australia/Melbourne
+```
+
 We need to install some dependencies. From [mytardis.readthedocs.io](https://mytardis.readthedocs.io/en/develop/admin/install.html):
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get update
@@ -445,13 +452,21 @@ ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/celery beat \
 WantedBy=multi-user.target
 ```
 
-It's good practice in MyTardis to have a Celery beat task that makes sure any files that missed verification get reverified. We can add this to `tardis/settings.py`:
+MyTardis's `tardis/default_settings/celery_settings.py` contains a Celery beat
+task which makes sure any files that missed verification get reverified.  We
+can overwrite the `CELERYBEAT_SCHEDULE` setting in our `tardis/settings.py` and
+make the "verify-files" task run more often to confirm that scheduled tasks are
+working.  For now, let's set it to run every 30 seconds instead of every 3600
+seconds.
+
+We can add this to `tardis/settings.py`:
 ```
 from datetime import timedelta
-from .celery import tardis_app
-tardis_app.conf.CELERYBEAT_SCHEDULE = {
-    'task': "tardis_portal.verify_dfos",
-    'schedule': timedelta(seconds=3600)
+CELERYBEAT_SCHEDULE = {
+    "verify-files": {
+        "task": "tardis_portal.verify_dfos",
+        "schedule": timedelta(seconds=30)
+    }
 }
 ```
 
@@ -471,6 +486,36 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
    Loaded: loaded (/etc/systemd/system/celerybeat.service; disabled; vendor preset: enabled)
    Active: active (running) since Tue 2018-09-25 05:44:19 UTC; 3s ago
 ```
+
+If we wait a minute a check the celerybeat service status again, we should see the tasks we have scheduled to run
+every 30 seconds:
+```
+ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
+● celerybeat.service - celerybeat daemon
+   Loaded: loaded (/etc/systemd/system/celerybeat.service; disabled; vendor preset: enabled)
+   Active: active (running) since Tue 2018-10-02 09:51:26 AEST; 1min 45s ago
+ Main PID: 5570 (celery)
+    Tasks: 1 (limit: 4707)
+   CGroup: /system.slice/celerybeat.service
+           └─5570 /home/mytardis/.virtualenvs/mytardis/bin/python2 /home/mytardis/.virtualenvs/mytardis/bin/celery beat -A tardis.celery.tardis_ap
+
+Oct 02 09:51:26 mytardis-ubuntu18 systemd[1]: Started celerybeat daemon.
+Oct 02 09:51:28 mytardis-ubuntu18 celery[5570]: [2018-10-02 09:51:28,515: INFO/MainProcess] beat: Starting...
+Oct 02 09:51:33 mytardis-ubuntu18 celery[5570]: [2018-10-02 09:51:33,916: INFO/MainProcess] Scheduler: Sending due task verify-files (tardis_porta
+Oct 02 09:52:03 mytardis-ubuntu18 celery[5570]: [2018-10-02 09:52:03,926: INFO/MainProcess] Scheduler: Sending due task verify-files (tardis_porta
+```
+
+You can check `/var/log/syslog` (or wherever you have chosen to redirect the output of your celerybeat service) for
+more information.
+
+Once you have confirmed that the `tardis_portal.verify_dfos` task is being run every 30 seconds, you can remove the
+`CELERYBEAT_SCHEDULE` from your `tardis/settings.py` to revert to the default interval of 3600 seconds in
+`tardis/default_settings/celery_settings.py` and restart the Celery beat service:
+
+```
+ubuntu@mytardis-ubuntu18:~$ sudo systemctl restart celerybeat
+```
+
 
 ## That's it
 We should now have a fully functional basic version of MyTardis.
