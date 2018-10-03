@@ -516,6 +516,19 @@ Once you have confirmed that the `tardis_portal.verify_dfos` task is being run e
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl restart celerybeat
 ```
 
+If you want these services to start automatically on boot, you can enable them
+as follows:
+
+```
+ubuntu@mytardis-ubuntu18:~$ sudo systemctl enable gunicorn
+Created symlink /etc/systemd/system/multi-user.target.wants/gunicorn.service → /etc/systemd/system/gunicorn.service.
+
+ubuntu@mytardis-ubuntu18:~$ sudo systemctl enable celeryworker
+Created symlink /etc/systemd/system/multi-user.target.wants/celeryworker.service → /etc/systemd/system/celeryworker.service.
+
+ubuntu@mytardis-ubuntu18:~$ sudo systemctl enable celerybeat
+Created symlink /etc/systemd/system/multi-user.target.wants/celerybeat.service → /etc/systemd/system/celerybeat.service.
+```
 
 ## That's it
 We should now have a fully functional basic version of MyTardis.
