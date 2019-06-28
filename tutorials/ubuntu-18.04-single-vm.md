@@ -73,7 +73,7 @@ Note: In production, we would most likely mount a CIFS or NFS volume to host the
 
 Let’s create a secret key:
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python -c "import os; from random import choice; key_line = '%sSECRET_KEY=\"%s\"  # generated from build.sh\n' % ('from tardis.settings_changeme import * \n\n' if not os.path.isfile('tardis/settings.py') else '', ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789@#%^&*(-_=+)') for i in range(50)])); f=open('tardis/settings.py', 'a+'); f.write(key_line); f.close()"
+(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python -c "import os; from random import choice; key_line = '%sSECRET_KEY=\"%s\"  # generated from build.sh\n' % ('from tardis.default_settings import * \n\n' if not os.path.isfile('tardis/settings.py') else '', ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789@#%^&*(-_=+)') for i in range(50)])); f=open('tardis/settings.py', 'a+'); f.write(key_line); f.close()"
 ```
 and run the mytardis unittests to see if every seems okay with the environment:
 ```
