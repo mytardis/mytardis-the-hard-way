@@ -153,10 +153,23 @@ At this point we could have a play with MyTardis on a local machine, but there a
 
 ## Switching to Postgres DB
 To run in production, we really need to switch databases.  Let’s install postgres:
+
+The command below installs the default PostgreSQL version for Ubuntu 18.  If you want to install a specific version, refer the subsequent command.
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install postgresql postgresql-contrib
 ```
 Note: we have switched back to the `ubuntu` user.
+
+If you want to install a specific version of PostgreSQL, you can use the PGDG repository.  First download and install the repository's key and apt list file:
+```
+ubuntu@mytardis-ubuntu18:~$ curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+ubuntu@mytardis-ubuntu18:~$ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+```
+Then install your required version of PostgreSQL:
+```
+ubuntu@mytardis-ubuntu18:~$ sudo apt-get update
+ubuntu@mytardis-ubuntu18:~$ sudo apt-get install postgresql-[VERSION]
+```
 
 Let’s create a database and credentials for `mytardis`
 ```
