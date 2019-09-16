@@ -278,29 +278,14 @@ If you get no errors, restart NGINX.
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl restart nginx
 ```
 
-By default Ubuntu iptables rules don’t allow port 80 through the firewall. We can use `ufw`  to control iptables and we can use the ‘Nginx Full’ profile to allow this:
-```
-ubuntu@mytardis-ubuntu18:~$ sudo ufw enable
-Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
-Firewall is active and enabled on system startup
-ubuntu@mytardis-ubuntu18:~$ sudo ufw allow OpenSSH
-ubuntu@mytardis-ubuntu18:~$ sudo ufw allow 'Nginx Full'
-ubuntu@mytardis-ubuntu18:~$ sudo ufw status
-Status: active
+To be able to access the web server from outside of the Ubuntu 18 machine,
+you need to open up a port (80 for HTTP and/or 443 for HTTPS).  The best way
+to do that depends on your infrastructure environment.  If using the NeCTAR
+research cloud, you should be familiar with security groups - https://support.ehelp.edu.au/support/solutions/articles/6000151135-how-to-create-security-groups-secgroups- and you should be familiar with tools for
+managing the Linux firewall, particularly `iptables` and/or `ufw`:
+https://help.ubuntu.com/lts/serverguide/firewall.html
 
-To                         Action      From
---                         ------      ----
-OpenSSH                    ALLOW       Anywhere                  
-Nginx Full                 ALLOW       Anywhere                  
-OpenSSH (v6)               ALLOW       Anywhere (v6)             
-Nginx Full (v6)            ALLOW       Anywhere (v6)
-```
-
-Note: it is **important** to allow OpenSSH too otherwise you will not be able to SSH back your VM later.
-Note: you could iptables rules directly.
-Note: If you are using a cloud user, you may also have security groups enabled. Make sure you allow port 80 (i.e., HTTP) in your security groups too.
-
-If we run our MyTardis server again now, it should be accessible by visiting the IP address of your server in the browser.
+If we run our MyTardis server after opening port 80, it should be accessible by visiting the IP address of your server in the browser.
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
 mytardis@mytardis-ubuntu18:~$ source ~/.virtualenvs/mytardis/bin/activate
