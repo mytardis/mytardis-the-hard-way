@@ -14,6 +14,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo timedatectl set-timezone Australia/Melbourne
 
 We need to install some dependencies. From
 [mytardis.readthedocs.io](https://mytardis.readthedocs.io/en/develop/admin/install.html):
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get update
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install \
@@ -27,62 +28,71 @@ ubuntu@mytardis-ubuntu18:~$ sudo apt-get install -y nodejs
 
 ## Installing MyTardis
 Let’s create a group and user for our web app:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo groupadd -r mytardis
 ubuntu@mytardis-ubuntu18:~$ sudo useradd -m -r -g mytardis -s /bin/bash mytardis
 ```
 
 Let’s switch to the new user:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
 ```
 
 Clone mytardis:
+
 ```
-mytardis@mytardis-ubuntu18:~$ git clone https://github.com/mytardis/mytardis.git
-mytardis@mytardis-ubuntu18:~$ cd mytardis/
-mytardis@mytardis-ubuntu18:~/mytardis$ git checkout -b series-4.1 origin/series-4.1
+~$ git clone https://github.com/mytardis/mytardis.git
+~$ cd mytardis/
+~/mytardis$ git checkout -b series-4.1 origin/series-4.1
 ```
 
 Create and activate virtualenv:
+
 ```
-mytardis@mytardis-ubuntu18:~/mytardis$ mkdir ~/virtualenvs
-mytardis@mytardis-ubuntu18:~/mytardis$ cd ~/virtualenvs/
-mytardis@mytardis-ubuntu18:~/virtualenvs$ python3 -m venv mytardis
-mytardis@mytardis-ubuntu18:~/virtualenvs$ source mytardis/bin/activate
-(mytardis) mytardis@mytardis-ubuntu18:~/virtualenvs$ cd ~/mytardis/
+~/mytardis$ mkdir ~/virtualenvs
+~/mytardis$ cd ~/virtualenvs/
+~/virtualenvs$ python3 -m venv mytardis
+~/virtualenvs$ source mytardis/bin/activate
+(mytardis) ~/virtualenvs$ cd ~/mytardis/
 ```
 
 Install pip dependencies:
+
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ pip install -U pip
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ pip install wheel
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ pip install -U -r requirements.txt
+(mytardis) ~/mytardis$ pip install -U pip
+(mytardis) ~/mytardis$ pip install wheel
+(mytardis) ~/mytardis$ pip install -U -r requirements.txt
 ```
 
 Install pip dependencies for Postgresql database engine:
+
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ pip install -r requirements-postgres.txt
+(mytardis) ~/mytardis$ pip install -r requirements-postgres.txt
 ```
 
 Install Javascript dependencies:
+
 ```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm install
 ```
 
 Make a directory to store the uploaded files:
+
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ mkdir -p var/store
+(mytardis) ~/mytardis$ mkdir -p var/store
 ```
 Note: In production, we would most likely mount a CIFS or NFS volume to host the data.
 
 Let’s create a secret key:
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python -c "import os; from random import choice; key_line = '%sSECRET_KEY=\"%s\"  # generated from build.sh\n' % ('from tardis.default_settings import * \n\n' if not os.path.isfile('tardis/settings.py') else '', ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789@#%^&(-=+)') for i in range(50)])); f=open('tardis/settings.py', 'a+'); f.write(key_line); f.close()"
+(mytardis) ~/mytardis$ python -c "import os; from random import choice; key_line = '%sSECRET_KEY=\"%s\"  # generated from build.sh\n' % ('from tardis.default_settings import * \n\n' if not os.path.isfile('tardis/settings.py') else '', ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789@#%^&(-=+)') for i in range(50)])); f=open('tardis/settings.py', 'a+'); f.write(key_line); f.close()"
 ```
 and run the mytardis unittests to see if every seems okay with the environment:
+
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python test.py
+(mytardis) ~/mytardis$ python test.py
 nosetests --verbosity=1
 Creating test database for alias 'default'...
 
@@ -97,15 +107,23 @@ Destroying test database for alias 'default'...
 Now let's run mytardis's Javascript unit tests.  This requires running the full "npm install" as above, rather than just running "npm install --production" to install the bare minimum Javascript dependencies.
 
 To ensure that Chromium can run the Javascript tests, you might need to install some additional packages:
+
 ```
-sudo apt install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+sudo apt install -y gconf-service libasound2 libatk1.0-0 libc6 \
+  libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 \
+  libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
+  libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 \
+  libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 \
+  libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 \
+  libxtst6  ca-certificates fonts-liberation libappindicator1 \
+  libnss3 lsb-release xdg-utils wget
 ```
 
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm test
+(mytardis) ~/mytardis$ npm test
 
 ...
->> 5 tests completed with 0 failed, 0 skipped, and 0 todo. 
+>> 5 tests completed with 0 failed, 0 skipped, and 0 todo.
 >> 15 assertions (in 84ms), passed: 15, failed: 0
 
 Done.
@@ -114,32 +132,41 @@ Done.
 Okay for now we are just going to use the `sqlite` database for testing. In fact, this is already configured in MyTardis’s  default settings [here](https://github.com/mytardis/mytardis/blob/develop/tardis/default_settings/database.py). Note we’ll need to do this again when we switch to a production database.
 
 Let's run the migrations to create the database tables in our SQLite database:
+
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py migrate
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py createcachetable default_cache
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py createcachetable celery_lock_cache
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ ls -lh db.sqlite3 
+~/mytardis$ python manage.py migrate
+~/mytardis$ python manage.py createcachetable default_cache
+~/mytardis$ python manage.py createcachetable celery_lock_cache
+~/mytardis$ ls -lh db.sqlite3
 -rw-r--r-- 1 mytardis mytardis 604K Sep 25 03:10 db.sqlite3
 ```
 
-Finally, we collect our static assets:
-```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py collectstatic
+Finally, we build our webpack bundles:
 
-527 static files copied to '/home/mytardis/mytardis/static', 572 post-processed.
+```
+(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm run-script build
+```
+
+and collect our static assets:
+
+```
+(mytardis) ~/mytardis$ python manage.py collectstatic
+
+258 static files copied to '/home/mytardis/mytardis/static', 300 post-processed.
 ```
 
 While we’re here, let’s also create a superuser for our admin:
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py createsuperuser
+(mytardis) ~/mytardis$ python manage.py createsuperuser
 ```
 
 Let's check if we can run MyTardis using Django's built-in web server (not recommended for production):
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ ./manage.py runserver
+(mytardis) ~/mytardis$ ./manage.py runserver
 ```
 
 And from another Terminal:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ wget http://127.0.0.1:8000
 --2018-09-25 03:21:23--  http://127.0.0.1:8000/
@@ -148,7 +175,7 @@ HTTP request sent, awaiting response... 200 OK
 Length: 10605 (10K) [text/html]
 Saving to: 'index.html’
 
-index.html          100%[===================>]  10.36K  --.-KB/s    in 0s      
+index.html          100%[===================>]  10.36K  --.-KB/s    in 0s
 
 2018-09-25 03:21:23 (53.2 MB/s) - 'index.html’ saved [10605/10605]
 ```
@@ -160,12 +187,14 @@ At this point we could have a play with MyTardis on a local machine, but there a
 To run in production, we really need to switch databases.  Let’s install postgres:
 
 The command below installs the default PostgreSQL version for Ubuntu 18.  If you want to install a specific version, refer the subsequent command.
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install postgresql postgresql-contrib
 ```
 Note: we have switched back to the `ubuntu` user.
 
 If you want to install a specific version of PostgreSQL, you can use the PGDG repository.  First download and install the repository's key and apt list file:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 ubuntu@mytardis-ubuntu18:~$ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -194,6 +223,7 @@ The following guide from DigitalOcean: [How To Set Up Django with Postgres, Ngin
 Also note Django's recommendations for setting the timezone to `UTC` for the database user when `USE_TZ` is True in Django's settings: https://docs.djangoproject.com/en/1.11/ref/databases/#optimizing-postgresql-s-configuration
 
 Let’s switch back to our `mytardis` user and configure the database in Django:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
 mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
@@ -202,6 +232,7 @@ mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
 ```
 
 Add the following to  `tardis/settings.py` :
+
 ```
 DATABASES = {
     'default': {
@@ -216,6 +247,7 @@ DATABASES = {
 ```
 
 We now need to re-run the migrations first and then create the `default_cache` and `celery_lock_cache` tables:
+
 ```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py migrate
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ python manage.py createcachetable default_cache
@@ -232,17 +264,20 @@ Django provides a demo web server (which can be run with `python manage.py runse
 > production environment is outside the scope of Django.)
 
 As the `ubuntu` user, let's install nginx:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install nginx
 ```
 
 Let’s create a simple Nginx config that proxies requests from port 80 (HTTP) to http://localhost:8000/ (i.e. MyTardis running with Django's `manage.py runserver`).
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo rm /etc/nginx/sites-enabled/default
 ubuntu@mytardis-ubuntu18:~$ sudo vi /etc/nginx/sites-available/mytardis
 ```
 
 Add the following to `/etc/nginx/sites-available/mytardis`:
+
 ```
 server {
   listen 80;
@@ -260,17 +295,19 @@ server {
     # proxy_pass http://unix:/tmp/gunicorn.socket;
 
     # But first we'll test proxying nginx to Django's manage.py runserver:
-    proxy_pass http://127.0.0.1:8000;    
+    proxy_pass http://127.0.0.1:8000;
   }
 }
 ```
 
 Now link this config into `/etc/nginx/site-enabled`:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo ln -s /etc/nginx/sites-available/mytardis /etc/nginx/sites-enabled/
 ```
 
 Test nginx config:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo nginx -t
 nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
@@ -278,6 +315,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
 If you get no errors, restart NGINX.
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl restart nginx
 ```
@@ -289,10 +327,11 @@ research cloud, you should be familiar with security groups - https://support.eh
 managing the Linux firewall, particularly `iptables` and/or `ufw`:
 https://help.ubuntu.com/lts/serverguide/firewall.html
 
-If we run our MyTardis server after opening port 80, it should be accessible by visiting the IP address of your server in the browser.
+If we run our MyTardis server after opening port 80, it should be accessible by visiting the IP address of your server in the browser:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
-mytardis@mytardis-ubuntu18:~$ source ~/.virtualenvs/mytardis/bin/activate
+mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
 (mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ ./manage.py runserver
 ```
@@ -308,6 +347,7 @@ As Django's `manage.py runserver` is not suitable for production, Django applica
 MyTardis deployments typically use the Gunicorn WSGI server.
 
 Instead of `./mytardis.py runserver` we can run via gunicorn using the gunicorn settings in the mytardis repo:
+
 ```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ gunicorn -c gunicorn_settings.py \
   -b unix:/tmp/gunicorn.socket -b 127.0.0.1:8000 --log-syslog  wsgi:application
@@ -315,12 +355,14 @@ Instead of `./mytardis.py runserver` we can run via gunicorn using the gunicorn 
 You can press Control-C to stop the Gunicorn processes - normally they would be launched from a Systemd service, not from an interactive Terminal session.
 
 Make a note of where the `gunicorn` bin is in you virtualenv:
+
 ```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ which gunicorn
-/home/mytardis/.virtualenvs/mytardis/bin/gunicorn
+/home/mytardis/virtualenvs/mytardis/bin/gunicorn
 ```
 
 Let's create a Systemd service to manage running gunicorn. Add the following to `/etc/systemd/system/gunicorn.service`:
+
 ```
 [Unit]
 Description=gunicorn daemon
@@ -330,7 +372,7 @@ After=network.target
 User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
-ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/gunicorn -c gunicorn_settings.py -b unix:/tmp/gunicorn.socket -b 127.0.0.1:8000 --log-syslog wsgi:application
+ExecStart=/home/mytardis/virtualenvs/mytardis/bin/gunicorn -c gunicorn_settings.py -b unix:/tmp/gunicorn.socket -b 127.0.0.1:8000 --log-syslog wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -339,6 +381,7 @@ WantedBy=multi-user.target
 Note that ExecStart is basically calling gunicorn from our virtualenv (see above) with the previous command we used to start it manually.
 
 We can now launch the service and check the status:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl start gunicorn
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl status gunicorn
@@ -351,6 +394,7 @@ We should now update our nginx config to proxy HTTP requests to Gunicorn's socke
 instead of to the Django manage.py runserver at http://127.0.0.1:8000
 
 Our /etc/nginx/sites-available/mytardis should be updated to look like this:
+
 ```
 server {
   listen 80;
@@ -367,7 +411,9 @@ server {
   }
 }
 ```
+
 We can reload the configuration with:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo service nginx reload
 ```
@@ -386,6 +432,7 @@ MyTardis's default log levels can be found in `tardis/default_settings/logging.p
 MyTardis has several tasks that operate asynchronously or on a schedule. This is done using [Celery](http://www.celeryproject.org). Celery uses a messaging queue and while there are some default configs in for MyTardis to use the database as the broker, this is not very efficient. A much better method is to use RabbitMQ as the broker. Let’s install RabbitMQ and configure it:
 
 As the `ubuntu` user:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install rabbitmq-server
 
@@ -394,24 +441,28 @@ Note: this installs from the Ubuntu repos. In general, it's better to install th
 
 
 We need to do a bit of setup to use RabbitMQ in Celery. This includes adding a user and a virtual host:
+
 ```
 sudo rabbitmqctl add_user mytardis makeitreallystrong
 sudo rabbitmqctl add_vhost mytardisvhost
 sudo rabbitmqctl set_user_tags mytardis mytardistag
 sudo rabbitmqctl set_permissions -p mytardisvhost mytardis ".*" ".*" ".*"
 ```
+
 Note: this information was sourced from [Using RabbitMQ — Celery 4.1.0 documentation](http://docs.celeryproject.org/en/latest/getting-started/brokers/rabbitmq.html)
 
 Now we need to add the following to `/home/mytardis/mytardis/tardis/settings.py`:
+
 ```
 CELERY_RESULT_BACKEND = 'amqp'
 BROKER_URL = 'amqp://mytardis:makeitreallystrong@localhost:5672/mytardisvhost'
 ```
 
 Let’s test whether this works from within our mytardis virtualenv:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
-mytardis@mytardis-ubuntu18:~$ source ~/.virtualenvs/mytardis/bin/activate
+mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
 (mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ DJANGO_SETTINGS_MODULE=tardis.settings celery worker -A tardis.celery.tardis_app
 ```
@@ -421,6 +472,7 @@ You can press Control-C to terminate your temporary celery worker instance.
 Like gunicorn, the celery worker processes should be run as a Systemd service.
 
 Add the following to `/etc/systemd/system/celeryworker.service`:
+
 ```
 [Unit]
 Description=celeryworker daemon
@@ -431,7 +483,7 @@ User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
 Environment=DJANGO_SETTINGS_MODULE=tardis.settings
-ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/celery worker \
+ExecStart=/home/mytardis/virtualenvs/mytardis/bin/celery worker \
   -A tardis.celery.tardis_app \
   -c 2 -Q celery,default -n "allqueues.%%h"
 
@@ -442,6 +494,7 @@ WantedBy=multi-user.target
 We also need a celery beat Systemd service for scheduling tasks.
 
 Add the following to `/etc/systemd/system/celerybeat.service`:
+
 ```
 [Unit]
 Description=celerybeat daemon
@@ -452,7 +505,7 @@ User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
 Environment=DJANGO_SETTINGS_MODULE=tardis.settings
-ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/celery beat \
+ExecStart=/home/mytardis/virtualenvs/mytardis/bin/celery beat \
   -A tardis.celery.tardis_app --loglevel INFO
 
 [Install]
@@ -467,6 +520,7 @@ working.  For now, let's set it to run every 30 seconds instead of every 300
 seconds.
 
 We can add this to `tardis/settings.py`:
+
 ```
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
@@ -478,6 +532,7 @@ CELERYBEAT_SCHEDULE = {
 ```
 
 We can now start the celeryworker and celerybeat services:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl start celeryworker
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celeryworker
@@ -496,6 +551,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
 
 If we wait a minute a check the celerybeat service status again, we should see the tasks we have scheduled to run
 every 30 seconds:
+
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
 ● celerybeat.service - celerybeat daemon
@@ -504,7 +560,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
  Main PID: 5570 (celery)
     Tasks: 1 (limit: 4707)
    CGroup: /system.slice/celerybeat.service
-           └─5570 /home/mytardis/.virtualenvs/mytardis/bin/python2 /home/mytardis/.virtualenvs/mytardis/bin/celery beat -A tardis.celery.tardis_ap
+           └─5570 /home/mytardis/virtualenvs/mytardis/bin/python2 /home/mytardis/virtualenvs/mytardis/bin/celery beat -A tardis.celery.tardis_ap
 
 Oct 02 09:51:26 mytardis-ubuntu18 systemd[1]: Started celerybeat daemon.
 Oct 02 09:51:28 mytardis-ubuntu18 celery[5570]: [2018-10-02 09:51:28,515: INFO/MainProcess] beat: Starting...
