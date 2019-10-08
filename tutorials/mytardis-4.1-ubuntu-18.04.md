@@ -593,6 +593,80 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl enable celerybeat
 Created symlink /etc/systemd/system/multi-user.target.wants/celerybeat.service → /etc/systemd/system/celerybeat.service.
 ```
 
+## Configuring Search
+
+MyTardis provides a search interface and the ability to index data for fast
+lookup.
+
+To enable search in MyTardis v4.1, the first thing to do is to install
+Elasticsearch v6.x:
+
+```
+sudo apt install apt-transport-https
+sudo apt install openjdk-8-jdk
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo sh -c 'echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list'
+sudo apt update
+sudo apt install elasticsearch
+```
+
+Now we can start the Elasticsearch service:
+
+```
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
+```
+
+Wait a few seconds for the service to start.  Then you can check that it
+is listening on port 9200:
+
+```
+curl -X GET "localhost:9200/"
+```
+
+Now we can configure our MyTardis instance ot use Elasticsearch by adding
+the following to our `tardis/settings.py`:
+
+```
+SINGLE_SEARCH_ENABLED = True
+INSTALLED_APPS += ('django_elasticsearch_dsl','tardis.apps.search',)
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://localhost:9200'
+    },
+}
+ELASTICSEARCH_DSL_INDEX_SETTINGS = {
+    'number_of_shards': 1
+}
+```
+
+Now we can use the `search_index` Django command, added by the
+`django_elasticsearch_dsl` app:
+
+```
+sudo -i -u mytardis
+cd ~/mytardis/
+source ~/.virtualenvs/mytardis/bin/activate
+./manage.py search_index --help
+```
+
+To build the index for the first time (or rebuild it), you can run:
+
+```
+./manage.py search_index --rebuild
+```
+
+Now to see the search box in the web interface, you need to restart or reload
+the gunicorn service:
+
+```
+sudo systemctl restart gunicorn
+```
+
+Now should see the Search box in the web interface.  Newly created experiments,
+datasets and datafiles will automatically be added to the index.
+
+
 ## That's it
 We should now have a fully functional basic version of MyTardis.
 
