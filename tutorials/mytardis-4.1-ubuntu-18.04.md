@@ -21,6 +21,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo apt-get install \
    git libldap2-dev libmagickwand-dev libsasl2-dev \
    libssl-dev libxml2-dev libxslt1-dev libmagic-dev curl gnupg \
    python3-dev python3-pip python3-venv zlib1g-dev libfreetype6-dev libjpeg-dev
+ubuntu@mytardis-ubuntu18:~$ sudo pip3 install virtualenvwrapper
 
 ubuntu@mytardis-ubuntu18:~$ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install -y nodejs
@@ -40,30 +41,39 @@ Let’s switch to the new user:
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
 ```
 
+Configure virtualenvwrapper:
+
+```
+mytardis@mytardis-ubuntu18:~$ cat << EOF >> ~/.bashrc
+> export VIRTUALENV_PYTHON=/usr/bin/python3
+> export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+> export WORKON_HOME=$HOME/.virtualenvs
+> export PROJECT_HOME=$HOME/mytardis
+> source /usr/local/bin/virtualenvwrapper.sh
+> EOF
+mytardis@mytardis-ubuntu18:~$ source ~/.bashrc 
+```
+
+Create and activate a virtualenv:
+
+```
+mytardis@mytardis-ubuntu18:~$ mkvirtualenv mytardis
+```
+
 Clone mytardis:
 
 ```
-~$ git clone https://github.com/mytardis/mytardis.git
-~$ cd mytardis/
-~/mytardis$ git checkout -b series-4.1 origin/series-4.1
+(mytardis) ~$ git clone https://github.com/mytardis/mytardis.git
+(mytardis) ~$ cd mytardis/
+(mytardis) ~/mytardis$ git checkout -b series-4.1 origin/series-4.1
 ```
 
-Create and activate virtualenv:
-
-```
-~/mytardis$ mkdir ~/virtualenvs
-~/mytardis$ cd ~/virtualenvs/
-~/virtualenvs$ python3 -m venv mytardis
-~/virtualenvs$ source mytardis/bin/activate
-(mytardis) ~/virtualenvs$ cd ~/mytardis/
-```
+Create and activate a virtualenv:
 
 Install pip dependencies:
 
 ```
-(mytardis) ~/mytardis$ pip install -U pip
-(mytardis) ~/mytardis$ pip install wheel
-(mytardis) ~/mytardis$ pip install -U -r requirements.txt
+(mytardis) ~/mytardis$ pip install -r requirements.txt
 ```
 
 Install pip dependencies for Postgresql database engine:
