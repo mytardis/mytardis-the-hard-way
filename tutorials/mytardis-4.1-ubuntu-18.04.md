@@ -99,7 +99,7 @@ Let’s create a secret key:
 ```
 (mytardis) ~/mytardis$ python -c "import os; from random import choice; key_line = '%sSECRET_KEY=\"%s\"  # generated from build.sh\n' % ('from tardis.default_settings import * \n\n' if not os.path.isfile('tardis/settings.py') else '', ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789@#%^&(-=+)') for i in range(50)])); f=open('tardis/settings.py', 'a+'); f.write(key_line); f.close()"
 ```
-and run the mytardis unittests to see if every seems okay with the environment:
+and run the mytardis unit tests to see if every seems okay with the environment:
 
 ```
 (mytardis) ~/mytardis$ python test.py
