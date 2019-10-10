@@ -85,7 +85,7 @@ Install pip dependencies for Postgresql database engine:
 Install Javascript dependencies:
 
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm install
+(mytardis) ~/mytardis$ npm install
 ```
 
 Make a directory to store the uploaded files:
