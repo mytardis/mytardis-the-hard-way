@@ -60,7 +60,7 @@ Create and activate a virtualenv:
 mytardis@mytardis-ubuntu18:~$ mkvirtualenv mytardis
 ```
 
-Clone mytardis:
+Clone mytardis and checkout the v4.1.x branch:
 
 ```
 (mytardis) ~$ git clone https://github.com/mytardis/mytardis.git
