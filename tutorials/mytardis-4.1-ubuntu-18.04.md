@@ -119,7 +119,9 @@ Now let's run mytardis's Javascript unit tests.  This requires running the full 
 To ensure that Chromium can run the Javascript tests, you might need to install some additional packages:
 
 ```
-sudo apt install -y gconf-service libasound2 libatk1.0-0 libc6 \
+(mytardis) mytardis@era2019-base:~/mytardis$ exit
+logout
+ubuntu@mytardis-ubuntu18:~$ sudo apt install -y gconf-service libasound2 libatk1.0-0 libc6 \
   libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 \
   libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
   libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 \
@@ -130,18 +132,33 @@ sudo apt install -y gconf-service libasound2 libatk1.0-0 libc6 \
 ```
 
 ```
-(mytardis) ~/mytardis$ npm test
+ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
+mytardis@mytardis-ubuntu18:~$ workon mytardis
+(mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis/
+(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm test
 
 ...
 >> 5 tests completed with 0 failed, 0 skipped, and 0 todo.
 >> 15 assertions (in 84ms), passed: 15, failed: 0
 
-Done.
+...
+
+ PASS  assets/js/apps/search/__tests__/search.spec.jsx
+  Search Component
+    ✓ Render Search Component (10ms)
+  Results Component
+    ✓ Render Results Component (4ms)
+  Result Component
+    ✓ Test Render Result component (3ms)
+    ✓ Test Render Simple Search Form (2ms)
+    ✓ Test Render Advance Search Form (2ms)
+...
+Ran all test suites.
 ```
 
 Okay for now we are just going to use the `sqlite` database for testing. In fact, this is already configured in MyTardis’s  default settings [here](https://github.com/mytardis/mytardis/blob/develop/tardis/default_settings/database.py). Note we’ll need to do this again when we switch to a production database.
 
-Let's run the migrations to create the database tables in our SQLite database:
+Let's run the migrations to create the database tables in our SQLite database, as described in `~/mytardis/build.sh`:
 
 ```
 ~/mytardis$ python manage.py migrate
@@ -154,7 +171,7 @@ Let's run the migrations to create the database tables in our SQLite database:
 Finally, we build our webpack bundles:
 
 ```
-(mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ npm run-script build
+(mytardis) ~/mytardis$ npm run-script build
 ```
 
 and collect our static assets:
