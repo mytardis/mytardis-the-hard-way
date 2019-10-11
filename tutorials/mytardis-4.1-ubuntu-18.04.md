@@ -385,7 +385,7 @@ Make a note of where the `gunicorn` bin is in you virtualenv:
 
 ```
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ which gunicorn
-/home/mytardis/virtualenvs/mytardis/bin/gunicorn
+/home/mytardis/.virtualenvs/mytardis/bin/gunicorn
 ```
 
 Let's create a Systemd service to manage running gunicorn. Add the following to `/etc/systemd/system/gunicorn.service`:
@@ -399,7 +399,7 @@ After=network.target
 User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
-ExecStart=/home/mytardis/virtualenvs/mytardis/bin/gunicorn -c gunicorn_settings.py -b unix:/tmp/gunicorn.socket -b 127.0.0.1:8000 --log-syslog wsgi:application
+ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/gunicorn -c gunicorn_settings.py -b unix:/tmp/gunicorn.socket -b 127.0.0.1:8000 --log-syslog wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -510,7 +510,7 @@ User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
 Environment=DJANGO_SETTINGS_MODULE=tardis.settings
-ExecStart=/home/mytardis/virtualenvs/mytardis/bin/celery worker \
+ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/celery worker \
   -A tardis.celery.tardis_app \
   -c 2 -Q celery,default -n "allqueues.%%h"
 
@@ -532,7 +532,7 @@ User=mytardis
 Group=mytardis
 WorkingDirectory=/home/mytardis/mytardis
 Environment=DJANGO_SETTINGS_MODULE=tardis.settings
-ExecStart=/home/mytardis/virtualenvs/mytardis/bin/celery beat \
+ExecStart=/home/mytardis/.virtualenvs/mytardis/bin/celery beat \
   -A tardis.celery.tardis_app --loglevel INFO
 
 [Install]
@@ -587,7 +587,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl status celerybeat
  Main PID: 5570 (celery)
     Tasks: 1 (limit: 4707)
    CGroup: /system.slice/celerybeat.service
-           └─5570 /home/mytardis/virtualenvs/mytardis/bin/python2 /home/mytardis/virtualenvs/mytardis/bin/celery beat -A tardis.celery.tardis_ap
+           └─5570 /home/mytardis/virtualenvs/mytardis/bin/python2 /home/mytardis/.virtualenvs/mytardis/bin/celery beat -A tardis.celery.tardis_ap
 
 Oct 02 09:51:26 mytardis-ubuntu18 systemd[1]: Started celerybeat daemon.
 Oct 02 09:51:28 mytardis-ubuntu18 celery[5570]: [2018-10-02 09:51:28,515: INFO/MainProcess] beat: Starting...
