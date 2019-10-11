@@ -461,10 +461,15 @@ MyTardis has several tasks that operate asynchronously or on a schedule. This is
 As the `ubuntu` user:
 
 ```
-ubuntu@mytardis-ubuntu18:~$ sudo apt-get install rabbitmq-server
-
+$ wget -O - "https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc" | sudo apt-key add -
+$ sudo bash -c "cat > /etc/apt/sources.list.d/bintray.rabbitmq.list" <<'EOF'
+deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
+deb https://dl.bintray.com/rabbitmq/debian bionic main
+EOF
+$ sudo apt-get update
+$ sudo apt-get install rabbitmq-server
 ```
-Note: this installs from the Ubuntu repos. In general, it's better to install the most up-to-date RabbitMQ. See [this page](https://www.rabbitmq.com/install-debian.html)
+For more information on installing RabbitMQ, see [this page](https://www.rabbitmq.com/install-debian.html)
 
 
 We need to do a bit of setup to use RabbitMQ in Celery. This includes adding a user and a virtual host:
