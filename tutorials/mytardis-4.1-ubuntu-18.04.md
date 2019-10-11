@@ -253,7 +253,7 @@ Let’s switch back to our `mytardis` user and configure the database in Django:
 
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
-mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
+mytardis@mytardis-ubuntu18:~$ workon mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ vi tardis/settings.py
 ```
@@ -358,7 +358,7 @@ If we run our MyTardis server after opening port 80, it should be accessible by 
 
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
-mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
+mytardis@mytardis-ubuntu18:~$ workon mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ ./manage.py runserver
 ```
@@ -420,7 +420,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo systemctl status gunicorn
 We should now update our nginx config to proxy HTTP requests to Gunicorn's socket (/tmp/gunicorn.socket)
 instead of to the Django manage.py runserver at http://127.0.0.1:8000
 
-Our /etc/nginx/sites-available/mytardis should be updated to look like this:
+Our `/etc/nginx/sites-available/mytardis` should be updated to look like this:
 
 ```
 server {
@@ -489,7 +489,7 @@ Let’s test whether this works from within our mytardis virtualenv:
 
 ```
 ubuntu@mytardis-ubuntu18:~$ sudo -i -u mytardis
-mytardis@mytardis-ubuntu18:~$ source ~/virtualenvs/mytardis/bin/activate
+mytardis@mytardis-ubuntu18:~$ workon mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~$ cd mytardis
 (mytardis) mytardis@mytardis-ubuntu18:~/mytardis$ DJANGO_SETTINGS_MODULE=tardis.settings celery worker -A tardis.celery.tardis_app
 ```
@@ -644,8 +644,8 @@ sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 ```
 
-Wait a few seconds for the service to start.  Then you can check that it
-is listening on port 9200:
+Wait for the service to start - it could take 20 seconds or more.
+Then you can check that it is listening on port 9200:
 
 ```
 curl -X GET "localhost:9200/"
@@ -673,7 +673,7 @@ Now we can use the `search_index` Django command, added by the
 ```
 sudo -i -u mytardis
 cd ~/mytardis/
-source ~/.virtualenvs/mytardis/bin/activate
+workon mytardis
 ./manage.py search_index --help
 ```
 
