@@ -23,7 +23,7 @@ ubuntu@mytardis-ubuntu18:~$ sudo apt-get install \
    python3-dev python3-pip python3-venv zlib1g-dev libfreetype6-dev libjpeg-dev
 ubuntu@mytardis-ubuntu18:~$ sudo pip3 install virtualenvwrapper
 
-ubuntu@mytardis-ubuntu18:~$ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+ubuntu@mytardis-ubuntu18:~$ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 ubuntu@mytardis-ubuntu18:~$ sudo apt-get install -y nodejs
 ```
 
