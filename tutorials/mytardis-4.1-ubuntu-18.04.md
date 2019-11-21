@@ -45,12 +45,12 @@ Configure virtualenvwrapper:
 
 ```
 mytardis@mytardis-ubuntu18:~$ cat << EOF >> ~/.bashrc
-> export VIRTUALENV_PYTHON=/usr/bin/python3
-> export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-> export WORKON_HOME=$HOME/.virtualenvs
-> export PROJECT_HOME=$HOME/mytardis
-> source /usr/local/bin/virtualenvwrapper.sh
-> EOF
+export VIRTUALENV_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/mytardis
+source /usr/local/bin/virtualenvwrapper.sh
+EOF
 mytardis@mytardis-ubuntu18:~$ source ~/.bashrc 
 ```
 
